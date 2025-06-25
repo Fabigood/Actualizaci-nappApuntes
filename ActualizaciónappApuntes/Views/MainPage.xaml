@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:ActualizaciónappApuntes.ViewModels"
+             xmlns:models="clr-namespace:ActualizaciónappApuntes.Models"
+             x:Class="ActualizaciónappApuntes.Views.MainPage"
+             x:Name="mainPageRef"
+             Title="Notas">
+
+    <ContentPage.BindingContext>
+        <viewmodels:NotesViewModel />
+    </ContentPage.BindingContext>
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+       
+        <Entry x:Name="noteEntry" Placeholder="Escribe tu nota aquí" />
+
+        <Button Text="Guardar nota"
+                BackgroundColor="MediumPurple"
+                TextColor="Black"
+                Command="{Binding AddOrUpdateNoteCommand}"
+                CommandParameter="{Binding Text, Source={x:Reference noteEntry}}" />
+
+        <CollectionView  ItemsSource="{Binding Notes}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Note">
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Editar"
+                                           BackgroundColor="Orange"
+                                           Command="{Binding Source={x:Reference mainPageRef}, Path=BindingContext.EditNoteCommand}"
+                                           CommandParameter="{Binding .}" />
+                                <SwipeItem Text="Eliminar"
+                                           BackgroundColor="Red"
+                                           Command="{Binding Source={x:Reference mainPageRef}, Path=BindingContext.DeleteNoteCommand}"
+                                           CommandParameter="{Binding .}" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Grid BackgroundColor="LightGray" Padding="10" Margin="5">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Text}" FontAttributes="Bold" />
+                                <Label Text="{Binding Date, StringFormat='{0:G}'}" FontSize="12" TextColor="Gray"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>

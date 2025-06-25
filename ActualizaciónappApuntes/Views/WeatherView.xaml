@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:namespace="clr-namespace:ActualizaciónappApuntes.ViewModels"
+             x:Class="ActualizaciónappApuntes.Views.WeatherView"
+             Title="Weather">
+    
+    <ContentPage.BindingContext>
+        <namespace:WeatherViewModel/>
+    </ContentPage.BindingContext>
+
+    <VerticalStackLayout BackgroundColor="#5da6f5" Padding="20">
+        <Grid Padding="20">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Row="0" Grid.Column="0" Margin="5" Padding="15" BackgroundColor="#ADD8E6" StrokeShape="RoundRectangle 15"   StrokeThickness="0">
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" >
+                    <Label Text="Latitud" FontAttributes="Bold" HorizontalTextAlignment="Center" FontSize="20" TextColor="White"/>
+                    <Label Text="{Binding WeatherDataInfo.latitude}" HorizontalTextAlignment="Center" FontSize="17" FontAttributes="Bold" TextColor="White"/>
+                </VerticalStackLayout>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="5,5" Radius="10" Opacity="0.3" />
+                </Border.Shadow>
+            </Border>
+            <Border Grid.Row="0" Grid.Column="1" Margin="5" Padding="15" BackgroundColor="#ADD8E6" StrokeShape="RoundRectangle 15"   StrokeThickness="0">
+                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                    <Label Text="Longitud" FontAttributes="Bold" HorizontalTextAlignment="Center" FontSize="20" TextColor="White"/>
+                    <Label Text="{Binding WeatherDataInfo.longitude}" HorizontalTextAlignment="Center" FontSize="17" FontAttributes="Bold" TextColor="White"/>
+                </VerticalStackLayout>
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="5,5" Radius="10" Opacity="0.3" />
+                </Border.Shadow>
+            </Border>
+        </Grid>
+        <BoxView HeightRequest="10" BackgroundColor="#5da6f5"/>
+        <Label Text="Hoy tenemos"
+           FontSize="Large"
+           FontFamily=""
+           FontAttributes="Bold"
+           TextColor="White"/>
+        <BoxView HeightRequest="10" BackgroundColor="#5da6f5"/>
+
+
+
+        <Border StrokeShape="RoundRectangle 20" StrokeThickness="0" BackgroundColor="#ADD8E6"  Padding="0" MaximumWidthRequest="400">
+            <Border.Shadow>
+                <Shadow Brush="Black"
+                Offset="10,10"
+                Radius="20"
+                Opacity="0.4" />
+            </Border.Shadow>
+
+            <Grid Padding="30" RowSpacing="15" ColumnSpacing="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <HorizontalStackLayout Grid.Row="0" Grid.Column="0" HorizontalOptions="Fill" VerticalOptions="Center" Spacing="20">
+                    <Image Source="reloj.png"/>
+                    <Label HorizontalOptions="End" VerticalOptions="Center" Text="Tiempo:" TextColor="White" FontSize="18" FontAttributes="Bold" Margin="0,0,10,0"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="Fill" VerticalOptions="Center">
+                    <Label Text="{Binding WeatherDataInfo.current.time}" 
+                   TextColor="White" FontSize="15" FontAttributes="Bold" HorizontalOptions="Start" />
+                    <Label Text="{Binding WeatherDataInfo.current_units.time}" 
+                   TextColor="White" FontSize="15" HorizontalTextAlignment="Start"/>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Grid.Row="1" Grid.Column="0" HorizontalOptions="Fill" VerticalOptions="Center" Spacing="20">
+                    <Image Source="temperatura.png"/>
+                    <Label HorizontalOptions="End" VerticalOptions="Center" Text="Temperatura:" TextColor="White" FontSize="18" FontAttributes="Bold" Margin="0,0,10,0"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Grid.Row="1" Grid.Column="1" HorizontalOptions="Fill" VerticalOptions="Center">
+                    <Label Text="{Binding WeatherDataInfo.current.temperature_2m}" 
+                   TextColor="White" FontSize="15" FontAttributes="Bold"  />
+                    <Label Text="{Binding WeatherDataInfo.current_units.temperature_2m}" 
+                   TextColor="White" FontSize="15" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Grid.Row="2" Grid.Column="0" HorizontalOptions="Fill" VerticalOptions="Center" Spacing="20">
+                    <Image Source="humedad.png"/>
+                    <Label HorizontalOptions="End" VerticalOptions="Center" Text="Humedad:" TextColor="White" FontSize="18" FontAttributes="Bold" Margin="0,0,10,0"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" HorizontalOptions="Fill" VerticalOptions="Center">
+                    <Label Text="{Binding WeatherDataInfo.current.relative_humidity_2m}" 
+                   TextColor="White" FontSize="15" FontAttributes="Bold" />
+                    <Label Text="{Binding WeatherDataInfo.current_units.relative_humidity_2m}" 
+                   TextColor="White" FontSize="15" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Grid.Row="3" Grid.Column="0" HorizontalOptions="Fill" VerticalOptions="Center" Spacing="20">
+                    <Image Source="lluvia.png"/>
+                    <Label HorizontalOptions="End" VerticalOptions="Center" Text="Lluvia:" TextColor="White" FontSize="18" FontAttributes="Bold" Margin="0,0,10,0"/>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" HorizontalOptions="Fill" VerticalOptions="Center">
+                    <Label Text="{Binding WeatherDataInfo.current.rain}" 
+                   TextColor="White" FontSize="15" FontAttributes="Bold" />
+                    <Label Text="{Binding WeatherDataInfo.current_units.rain}" 
+                   TextColor="White" FontSize="15" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Border>
+    </VerticalStackLayout>
+</ContentPage>
