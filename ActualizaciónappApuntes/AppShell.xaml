@@ -17,6 +17,11 @@
         ContentTemplate="{DataTemplate views:MainPage}" 
         Icon="icon_notes_ios.png"    
         />
+        <ShellContent
+            Title="Recordatorios"
+            ContentTemplate="{DataTemplate local:RecordatoriosPage}"
+            Icon="recordatorio.png" />
+        
         <ShellContent 
          Title="About" 
         ContentTemplate="{DataTemplate local:AboutPage}"
@@ -29,10 +34,7 @@
         ContentTemplate="{DataTemplate views:WeatherView}"
         Icon="clima.png"
         />
-        <ShellContent
-            Title="Recordatorios"
-            ContentTemplate="{DataTemplate local:RecordatoriosPage}"
-            Icon="icon_reminders.png" />
+
 
     </TabBar>
 
