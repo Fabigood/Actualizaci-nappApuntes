@@ -1,0 +1,33 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:ActualizaciónappApuntes.ViewModels"
+             x:Class="ActualizaciónappApuntes.Views.RecordatoriosPage"
+             Title="Recordatorios">
+
+    <ContentPage.BindingContext>
+        <viewmodels:RecordatoriosViewModel />
+    </ContentPage.BindingContext>
+
+    <VerticalStackLayout Padding="10">
+
+        <Entry Placeholder="Texto del recordatorio" Text="{Binding NuevoTexto}" />
+        <TimePicker Time="{Binding NuevaHora}" />
+        <Switch IsToggled="{Binding NuevoActivo}" />
+        <Button Text="Agregar" Command="{Binding AgregarCommand}" />
+
+        <CollectionView ItemsSource="{Binding ListaRecordatorios}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BorderColor="Gray" Margin="5">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Texto}" FontAttributes="Bold" />
+                            <Label Text="{Binding FechaHora}" />
+                            <Label Text="{Binding Activo, StringFormat='Activo: {0}'}" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+</ContentPage>
