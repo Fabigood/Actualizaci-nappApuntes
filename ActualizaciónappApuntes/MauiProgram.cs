@@ -1,25 +1,31 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ActualizaciónappApuntes.Services;
+using ActualizaciónappApuntes.ViewModels;
+using ActualizaciónappApuntes.Views;
+using ActualizaciónappApuntes.Converters;
 
-namespace ActualizaciónappApuntes
+namespace ActualizaciónappApuntes;
+
+public static class MauiProgram
 {
-    public static class MauiProgram
+    public static MauiApp CreateMauiApp()
     {
-        public static MauiApp CreateMauiApp()
-        {
-            var builder = MauiApp.CreateBuilder();
-            builder
-                .UseMauiApp<App>()
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+            });
 
-#if DEBUG
-    		builder.Logging.AddDebug();
-#endif
+        // Registrar servicios
+        builder.Services.AddSingleton<RecordatorioService>();
 
-            return builder.Build();
-        }
+        // Registrar ViewModels
+        builder.Services.AddTransient<RecordatoriosViewModel>();
+
+        // Registrar Views
+        builder.Services.AddTransient<RecordatoriosPage>();
+
+        return builder.Build();
     }
 }

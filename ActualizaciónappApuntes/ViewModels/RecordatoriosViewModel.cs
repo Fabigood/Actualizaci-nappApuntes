@@ -9,141 +9,103 @@ namespace ActualizaciónappApuntes.ViewModels
 {
     public class RecordatoriosViewModel : INotifyPropertyChanged
     {
-        private readonly RecordatoriosService _recordatoriosService;
-        private ObservableCollection<Recordatorio> _recordatorios;
-        private bool _isLoading;
-        private string _nuevoTexto = "";
-        private DateTime _nuevaFecha = DateTime.Now.AddHours(1);
-        private TimeSpan _nuevaHora = DateTime.Now.AddHours(1).TimeOfDay;
-
-        public ObservableCollection<Recordatorio> Recordatorios
-        {
-            get => _recordatorios;
-            set { _recordatorios = value; OnPropertyChanged(); }
-        }
-
-        public bool IsLoading
-        {
-            get => _isLoading;
-            set { _isLoading = value; OnPropertyChanged(); }
-        }
-
-        public string NuevoTexto
-        {
-            get => _nuevoTexto;
-            set
-            {
-                _nuevoTexto = value;
-                OnPropertyChanged();
-                ((Command)AgregarRecordatorioCommand).ChangeCanExecute();
-            }
-        }
-
-        public DateTime NuevaFecha
-        {
-            get => _nuevaFecha;
-            set { _nuevaFecha = value; OnPropertyChanged(); }
-        }
-
-        public TimeSpan NuevaHora
-        {
-            get => _nuevaHora;
-            set { _nuevaHora = value; OnPropertyChanged(); }
-        }
-
-        public ICommand AgregarRecordatorioCommand { get; }
-        public ICommand EliminarRecordatorioCommand { get; }
-        public ICommand ToggleActivoCommand { get; }
-        public ICommand RefreshCommand { get; }
+        private readonly RecordatorioService _recordatorioService;
+        private string _texto = string.Empty;
+        private DateTime _fechaHora = DateTime.Now;
+        private bool _activo = true;
 
         public RecordatoriosViewModel()
         {
-            _recordatoriosService = new RecordatoriosService();
-            _recordatorios = new ObservableCollection<Recordatorio>();
+            _recordatorioService = new RecordatorioService();
+            Recordatorios = new ObservableCollection<Recordatorio>();
 
-            AgregarRecordatorioCommand = new Command(async () => await AgregarRecordatorio(), () => !string.IsNullOrWhiteSpace(NuevoTexto));
-            EliminarRecordatorioCommand = new Command<Recordatorio>(async (r) => await EliminarRecordatorio(r));
-            ToggleActivoCommand = new Command<Recordatorio>(async (r) => await ToggleActivo(r));
-            RefreshCommand = new Command(async () => await CargarRecordatorios());
+            AddCommand = new Command(async () => await AddRecordatorio());
+            DeleteCommand = new Command<Recordatorio>(async (r) => await DeleteRecordatorio(r));
+            LoadCommand = new Command(async () => await LoadRecordatorios());
 
-            _ = CargarRecordatorios();
+            _ = LoadRecordatorios();
         }
 
-        private async Task CargarRecordatorios()
-        {
-            try
-            {
-                IsLoading = true;
-                var data = await _recordatoriosService.GetRecordatoriosAsync();
+        public ObservableCollection<Recordatorio> Recordatorios { get; }
 
-                Recordatorios.Clear();
-                foreach (var r in data.OrderBy(r => r.FechaHora))
-                    Recordatorios.Add(r);
-            }
-            catch (Exception ex)
+        public string Texto
+        {
+            get => _texto;
+            set
             {
-                await Application.Current.MainPage.DisplayAlert("Error", $"Error al cargar: {ex.Message}", "OK");
-            }
-            finally
-            {
-                IsLoading = false;
+                _texto = value;
+                OnPropertyChanged();
             }
         }
 
-        private async Task AgregarRecordatorio()
+        public DateTime FechaHora
         {
-            try
+            get => _fechaHora;
+            set
             {
-                var nuevo = new Recordatorio
-                {
-                    Texto = NuevoTexto.Trim(),
-                    FechaHora = NuevaFecha.Date + NuevaHora,
-                    Activo = true
-                };
-
-                var exito = await _recordatoriosService.AddRecordatorioAsync(nuevo);
-                if (exito)
-                {
-                    Recordatorios.Add(nuevo);
-                    NuevoTexto = "";
-                    NuevaFecha = DateTime.Now.AddHours(1);
-                    NuevaHora = DateTime.Now.AddHours(1).TimeOfDay;
-
-                    // Ordenar
-                    var ordenados = Recordatorios.OrderBy(r => r.FechaHora).ToList();
-                    Recordatorios.Clear();
-                    foreach (var r in ordenados) Recordatorios.Add(r);
-                }
-                else
-                {
-                    await Application.Current.MainPage.DisplayAlert("Error", "No se pudo guardar", "OK");
-                }
-            }
-            catch (Exception ex)
-            {
-                await Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+                _fechaHora = value;
+                OnPropertyChanged();
             }
         }
 
-        private async Task EliminarRecordatorio(Recordatorio r)
+        public bool Activo
         {
-            var confirm = await Application.Current.MainPage.DisplayAlert("Eliminar", $"¿Eliminar '{r.Texto}'?", "Sí", "No");
-            if (!confirm) return;
-
-            var exito = await _recordatoriosService.DeleteRecordatorioAsync(r.Id);
-            if (exito)
-                Recordatorios.Remove(r);
+            get => _activo;
+            set
+            {
+                _activo = value;
+                OnPropertyChanged();
+            }
         }
 
-        private async Task ToggleActivo(Recordatorio r)
+        public ICommand AddCommand { get; }
+        public ICommand DeleteCommand { get; }
+        public ICommand LoadCommand { get; }
+
+        private async Task AddRecordatorio()
         {
-            r.Activo = !r.Activo;
-            await _recordatoriosService.UpdateRecordatorioAsync(r);
-            OnPropertyChanged(nameof(Recordatorios));
+            if (string.IsNullOrWhiteSpace(Texto))
+                return;
+
+            var recordatorio = new Recordatorio
+            {
+                Texto = Texto,
+                FechaHora = FechaHora,
+                Activo = Activo
+            };
+
+            await _recordatorioService.AddAsync(recordatorio);
+            Recordatorios.Add(recordatorio);
+
+            // Limpiar campos
+            Texto = string.Empty;
+            FechaHora = DateTime.Now;
+            Activo = true;
+        }
+
+        private async Task DeleteRecordatorio(Recordatorio recordatorio)
+        {
+            if (recordatorio == null) return;
+
+            await _recordatorioService.DeleteAsync(recordatorio.Id);
+            Recordatorios.Remove(recordatorio);
+        }
+
+        private async Task LoadRecordatorios()
+        {
+            var recordatorios = await _recordatorioService.GetAllAsync();
+            Recordatorios.Clear();
+            foreach (var recordatorio in recordatorios.OrderByDescending(r => r.FechaHora))
+            {
+                Recordatorios.Add(recordatorio);
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

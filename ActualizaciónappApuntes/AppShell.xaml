@@ -29,9 +29,10 @@
         ContentTemplate="{DataTemplate views:WeatherView}"
         Icon="clima.png"
         />
-        <Tab Title="Recordatorios" Icon="reminder.png">
-            <ShellContent ContentTemplate="{DataTemplate local:RecordatoriosPage}" />
-        </Tab>
+        <ShellContent
+            Title="Recordatorios"
+            ContentTemplate="{DataTemplate local:RecordatoriosPage}"
+            Icon="icon_reminders.png" />
 
     </TabBar>
 

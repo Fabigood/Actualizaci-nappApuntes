@@ -1,15 +1,9 @@
-
 namespace ActualizaciónappApuntes.Views;
 
-public partial class RecordatorioPage : ContentPage
+public partial class RecordatoriosPage : ContentPage
 {
-	public RecordatorioPage()
-	{
-		InitializeComponent();
-	}
-
-    private void InitializeComponent()
+    public RecordatoriosPage()
     {
-        throw new NotImplementedException();
+        InitializeComponent();
     }
 }
