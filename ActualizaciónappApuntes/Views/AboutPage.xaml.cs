@@ -1,12 +1,12 @@
-using Microsoft.Maui.Controls;
+using ActualizaciónappApuntes.ViewModels;
 
-namespace ActualizaciónappApuntes.Views
+namespace ActualizaciónappApuntes.Views;
+
+public partial class AboutPage : ContentPage
 {
-    public partial class AboutPage : ContentPage
+    public AboutPage()
     {
-        public AboutPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+        BindingContext = new AboutViewModel();
     }
 }
